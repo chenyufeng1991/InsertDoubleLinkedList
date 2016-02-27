@@ -86,7 +86,7 @@ Node *createList(Node *pNode){
     }
 
     printf("%s函数执行，建立链表成功\n",__FUNCTION__);
-    
+
     return pNode;
 }
 
@@ -111,6 +111,7 @@ elemType sizeList(Node *pNode){
 Node *InsertList(Node *pNode,int pos,int x){
 
     int i = 1;
+    int size = sizeList(pNode);
     Node *pMove;
     Node *pInsert;
     pInsert = (Node *)malloc(sizeof(Node));
@@ -122,24 +123,45 @@ Node *InsertList(Node *pNode,int pos,int x){
     pMove = pNode;
 
     //首先检查pos值是否合法
+    if (pos < 0 || pos > size) {
+        printf("%s函数执行，输入的pos值非法，插入节点失败\n",__FUNCTION__);
+        return pNode;
+    }
 
+    if (pNode == NULL && pos == 0) {
+        pNode = pInsert;
+        printf("%s函数执行，在pos=%d位置插入x=%d节点成功\n",__FUNCTION__,pos,x);
+        return pNode;
+    }
 
-
-
-
-    while (pMove != NULL) {
-        if (i == pos) {
-
-            pInsert->next = pMove->next;
-            pMove->next->prior = pInsert;
-            pInsert->prior = pMove;
-            pMove->next = pInsert;
-            break;
-        }else{
-            i++;
+    //单独考虑插入到第一个节点和最后一个节点
+    if (pos == 0) {
+        pInsert->next = pNode;
+        pNode->prior = pInsert;
+        pNode = pInsert;
+    }else if(pos == size){
+        while (pMove->next != NULL) {
             pMove = pMove->next;
         }
+        pMove->next = pInsert;
+        pInsert->prior = pMove;
+
+    }else{
+        while (pMove != NULL) {
+            if (i == pos) {
+
+                pInsert->next = pMove->next;
+                pMove->next->prior = pInsert;
+                pInsert->prior = pMove;
+                pMove->next = pInsert;
+                break;
+            }else{
+                i++;
+                pMove = pMove->next;
+            }
+        }
     }
+
     printf("%s函数执行，在pos=%d位置插入x=%d节点成功\n",__FUNCTION__,pos,x);
 
     return pNode;
@@ -154,10 +176,10 @@ int main(int argc, const char * argv[]) {
 
     pList = createList(pList);
     printList(pList);
-
-    pList = InsertList(pList,4,999);
+    
+    pList = InsertList(pList,3,999);
     printList(pList);
-
+    
     return 0;
 }
 
