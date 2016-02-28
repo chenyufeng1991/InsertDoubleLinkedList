@@ -128,6 +128,7 @@ Node *InsertList(Node *pNode,int pos,int x){
         return pNode;
     }
 
+    //原链表是一个空链表，在第一个位置插入节点
     if (pNode == NULL && pos == 0) {
         pNode = pInsert;
         printf("%s函数执行，在pos=%d位置插入x=%d节点成功\n",__FUNCTION__,pos,x);
@@ -136,26 +137,29 @@ Node *InsertList(Node *pNode,int pos,int x){
 
     //单独考虑插入到第一个节点和最后一个节点
     if (pos == 0) {
+        //插入的节点作为第一个节点
         pInsert->next = pNode;
         pNode->prior = pInsert;
         pNode = pInsert;
     }else if(pos == size){
+        //插入的节点是最后一个节点
         while (pMove->next != NULL) {
             pMove = pMove->next;
         }
         pMove->next = pInsert;
         pInsert->prior = pMove;
-
     }else{
         while (pMove != NULL) {
             if (i == pos) {
 
+                //找到该位置，请注意下面的链表的链接顺序很重要
                 pInsert->next = pMove->next;
                 pMove->next->prior = pInsert;
                 pInsert->prior = pMove;
                 pMove->next = pInsert;
                 break;
             }else{
+                //继续找下一个节点
                 i++;
                 pMove = pMove->next;
             }
